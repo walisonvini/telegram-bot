@@ -15,7 +15,7 @@ Antes de iniciar o projeto, certifique-se de ter instalado em sua máquina:
 
 ### 1. Clonar o projeto
 ```bash
-git clone https://github.com/walisonvini/telegram-bot.git
+git clone https://github.com/seu-usuario/telegram-bot.git
 cd telegram-bot
 ```
 
@@ -77,7 +77,7 @@ NGROK_AUTHTOKEN=seu-token-aqui
 
 5. Informe a URL HTTPS gerada pelo `sail share` ou pelo **ngrok** como endereço público do seu bot.
 ```env
-TELEGRAM_WEBHOOK_URL=seu-token-aqui
+TELEGRAM_WEBHOOK_URL=sua-url-aqui
 ```
 
 ## 🤖 Configuração do Telegram Bot
@@ -90,6 +90,12 @@ Para integrar seu projeto com o Telegram:
 
 ```env
 TELEGRAM_BOT_TOKEN=seu-token-aqui
+```
+
+Limpe o cache do laravel
+```bash
+./vendor/bin/sail artisan config:clear
+./vendor/bin/sail artisan cache:clear
 ```
 
 ### Ativar o Webhook no Telegram
@@ -106,4 +112,9 @@ E execute o comando:
 
 ```bash
 app(App\Services\TelegramServices::class)->setWebhook();
+```
+
+### ⚙️ Rodando as filas com Horizon
+```bash
+./vendor/bin/sail artisan horizon
 ```

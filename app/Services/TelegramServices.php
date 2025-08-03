@@ -167,7 +167,7 @@ class TelegramServices
 
     public function setWebhook()
     {
-        $url = env('TELEGRAM_WEBHOOK_URL') . '/telegram/webhook';
+        $url = env('TELEGRAM_WEBHOOK_URL') . '/api/telegram/webhook';
 
         $response = Http::post($this->telegramApiUrl . $this->telegramBotToken . "/setWebhook", [
             'url' => $url
