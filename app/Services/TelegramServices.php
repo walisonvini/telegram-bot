@@ -164,4 +164,15 @@ class TelegramServices
     {
         return $this->sendMessage($chatId, "Funcionalidade de acompanhamento em desenvolvimento.");
     }
+
+    public function setWebhook()
+    {
+        $url = env('TELEGRAM_WEBHOOK_URL') . '/telegram/webhook';
+
+        $response = Http::post($this->telegramApiUrl . $this->telegramBotToken . "/setWebhook", [
+            'url' => $url
+        ]);
+
+        return $response->json();
+    }
 }

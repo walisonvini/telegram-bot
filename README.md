@@ -1,61 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🤖 Telegram Bot (Laravel + Sail)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este projeto é um **bot do Telegram** desenvolvido em Laravel 12 utilizando **Docker (Sail)** e **DevContainer**.  
+Ele simula um fluxo de entrada em uma comunidade VIP, integrando diretamente com a **Telegram Bot API**
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ✅ Pré-requisitos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Antes de iniciar o projeto, certifique-se de ter instalado em sua máquina:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Docker](https://www.docker.com/get-started) (necessário para rodar o Laravel Sail)
 
-## Learning Laravel
+## 📦 Instalação
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Clonar o projeto
+```bash
+git clone https://github.com/seu-usuario/telegram-bot.git
+cd telegram-bot
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 2. Copiar variáveis de ambiente
+```bash
+cp .env.example .env
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 3. Instalar dependências
 
-## Laravel Sponsors
+Não é necessário ter **PHP** instalado localmente, pois o comando roda dentro de um container Docker.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd):/var/www/html \
+    -w /var/www/html \
+    laravelsail/php84-composer \
+    composer install
+```
 
-### Premium Partners
+### 4. Subir os containers
+```bash
+./vendor/bin/sail up -d
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 5. Executar as migrations
+```bash
+./vendor/bin/sail artisan migrate
+```
 
-## Contributing
+## 6. Gerar a chave da aplicação
+```bash
+./vendor/bin/sail artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🚀 Configuração do Webhook
+Para expor sua aplicação local ao Telegram, utilize o comando do Sail:
+```bash
+./vendor/bin/sail share
+```
 
-## Code of Conduct
+⚠️ **Nota:** Caso o `sail share` não funcione corretamente com **HTTPS**, você pode utilizar a integração com o **ngrok** já incluída no projeto.  
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Crie uma conta gratuita no [ngrok](https://dashboard.ngrok.com/login).  
+2. Gere seu **Auth Token** no painel do ngrok.  
+3. Adicione o token no arquivo `.env`:
 
-## Security Vulnerabilities
+```env
+NGROK_AUTHTOKEN=seu-token-aqui
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. Reinicie os containers para aplicar a nova configuração:
 
-## License
+```bash
+./vendor/bin/sail down
+./vendor/bin/sail up -d
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. Informe a URL HTTPS gerada pelo `sail share` ou pelo **ngrok** como endereço público do seu bot.
+```env
+TELEGRAM_WEBHOOK_URL=seu-token-aqui
+```
+
+## 🤖 Configuração do Telegram Bot
+
+Para integrar seu projeto com o Telegram:
+
+1. Crie um bot através do [@BotFather](https://t.me/BotFather) no Telegram.  
+2. Copie o **token** fornecido pelo BotFather.  
+3. Adicione o token no seu arquivo `.env`:
+
+```env
+TELEGRAM_BOT_TOKEN=seu-token-aqui
+```
+
+### Ativar o Webhook no Telegram
+
+Após configurar a URL pública (via `sail share` ou **ngrok**), ative o webhook no Telegram executando o método `setWebhook` do serviço `TelegramServices`.
+
+No shell, entre no Tinker do Laravel:
+
+```bash
+./vendor/bin/sail artisan tinker
+```
+
+E execute o comando:
+
+```bash
+app(App\Services\TelegramServices::class)->setWebhook();
+```
