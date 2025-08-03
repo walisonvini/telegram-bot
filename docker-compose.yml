@@ -56,6 +56,15 @@ services:
             - 'sailredis:/data'
         networks:
             - sail
+    ngrok:
+        image: ngrok/ngrok:latest
+        command: http laravel.test:80
+        depends_on:
+            - laravel.test
+        networks:
+            - sail
+        environment:
+            NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
 networks:
     sail:
         driver: bridge
