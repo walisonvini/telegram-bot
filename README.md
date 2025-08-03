@@ -15,7 +15,7 @@ Antes de iniciar o projeto, certifique-se de ter instalado em sua máquina:
 
 ### 1. Clonar o projeto
 ```bash
-git clone https://github.com/seu-usuario/telegram-bot.git
+git clone https://github.com/walisonvini/telegram-bot.git
 cd telegram-bot
 ```
 
